@@ -1,16 +1,18 @@
-package main
+package goui
 
 import (
 	"github.com/boppreh/forked-go-ui"
-	"time"
 )
 
-func Progress(title string, descriptionChannel chan string, progressChannel chan int) {
-	w := ui.NewWindow(title, 400, 120)
+func Progress(title string, descriptionChannel chan string, progressChannel chan int, cancel func()) {
+	w := ui.NewWindow(title, 383, 103)
 
 	descriptionLabel := ui.NewLabel("")
 	progressBar := ui.NewProgressBar()
-	w.Open(ui.Layout(descriptionLabel, progressBar))
+	cancelButton := ui.NewButton("Cancel")
+	layout := ui.Layout(descriptionLabel, progressBar, ui.Layout(nil, cancelButton))
+	w.Open(layout)
+	layout.Fit()
 
 	for {
 		select {
@@ -26,20 +28,23 @@ func Progress(title string, descriptionChannel chan string, progressChannel chan
 			progressBar.SetProgress(p)
 		case <-w.Closing:
 			return
+		case <- cancelButton.Clicked:
+			if cancel == nil {
+				return
+			} else {
+				go cancel()
+			}
 		}
 	}
 }
 
-func myMain() {
-	descriptionChannel := make(chan string)
-	progressChannel := make(chan int)
-	go func() {
-		for i := 1; i <= 100; i++ {
-			progressChannel <- i
-			descriptionChannel <- "Doing " + string(i)
-			time.Sleep(time.Millisecond * 100)
-		}
-		close(progressChannel)
-	}()
-	Progress("Title", descriptionChannel, progressChannel)
+func Error(primaryText string, secondaryText string) {
+	ui.MsgBoxError(primaryText, secondaryText)
+}
+
+func Start(main func()) {
+	err := ui.Go(main)
+	if err != nil {
+		panic(err)
+	}
 }

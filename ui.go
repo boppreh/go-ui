@@ -43,10 +43,3 @@ func myMain() {
 	}()
 	Progress("Title", descriptionChannel, progressChannel)
 }
-
-func main() {
-	err := ui.Go(myMain)
-	if err != nil {
-		panic(err)
-	}
-}

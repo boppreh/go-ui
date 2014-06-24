@@ -12,6 +12,8 @@ func Progress(title string, descriptionChannel chan string, progressChannel chan
 	cancelButton := ui.NewButton("Cancel")
 	layout := ui.Layout(descriptionLabel, progressBar, ui.Layout(nil, cancelButton))
 	w.Open(layout)
+	w.Center()
+	defer w.Hide()
 
 	for {
 		select {
@@ -27,7 +29,7 @@ func Progress(title string, descriptionChannel chan string, progressChannel chan
 			progressBar.SetProgress(p)
 		case <-w.Closing:
 			return
-		case <- cancelButton.Clicked:
+		case <-cancelButton.Clicked:
 			if cancel == nil {
 				return
 			} else {

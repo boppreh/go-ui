@@ -5,14 +5,13 @@ import (
 )
 
 func Progress(title string, descriptionChannel chan string, progressChannel chan int, cancel func()) {
-	w := ui.NewWindow(title, 383, 103)
+	w := ui.NewWindow(title, 383, 143)
 
 	descriptionLabel := ui.NewLabel("")
 	progressBar := ui.NewProgressBar()
 	cancelButton := ui.NewButton("Cancel")
 	layout := ui.Layout(descriptionLabel, progressBar, ui.Layout(nil, cancelButton))
 	w.Open(layout)
-	layout.Fit()
 
 	for {
 		select {
@@ -40,6 +39,10 @@ func Progress(title string, descriptionChannel chan string, progressChannel chan
 
 func Error(primaryText string, secondaryText string) {
 	ui.MsgBoxError(primaryText, secondaryText)
+}
+
+func Info(primaryText string, secondaryText string) {
+	ui.MsgBox(primaryText, secondaryText)
 }
 
 func Start(main func()) {

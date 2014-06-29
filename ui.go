@@ -1,7 +1,7 @@
 package goui
 
 import (
-	"github.com/boppreh/forked-go-ui"
+	"github.com/andlabs/ui"
 )
 
 func Progress(title string, descriptionChannel chan string, progressChannel chan int, cancel func()) {
@@ -11,6 +11,7 @@ func Progress(title string, descriptionChannel chan string, progressChannel chan
 	progressBar := ui.NewProgressBar()
 	cancelButton := ui.NewButton("Cancel")
 	layout := ui.Layout(descriptionLabel, progressBar, ui.Layout(nil, cancelButton))
+	w.SetSpaced(true)
 	w.Open(layout)
 	w.Center()
 	defer w.Hide()
